@@ -20,6 +20,15 @@ class SerialConnector(QtCore.QObject):
     def __del__(self):
         self.isExiting = True
 
+    def open(self):
+        self.transport.open()
+
+    def close(self):
+        self.transport.close()
+
+    def setPort(self, port):
+        self.transport.setPort(port)
+
     def run(self):
         while not self.isExiting:
             pass
@@ -28,6 +37,10 @@ class SerialConnector(QtCore.QObject):
         return self.transport.readline()
 
     def write(self, data):
+        if type(data) is str:
+            data = data.encode()
+        # Une commande doit se terminer par <CR>
+        data = data + b"\r" if data[-1:] != b"\r" else data
         self.transport.write(data)
 
     def get(self, cmd):
@@ -38,7 +51,7 @@ class SerialConnector(QtCore.QObject):
             cmd = cmd.encode()
 
         # Send command
-        self.write(cmd + b"\r" if cmd[-1:] != b"\r" else cmd)
+        self.write(cmd)
 
         # Read reply
         reply = self.read()\
@@ -51,6 +64,3 @@ class SerialConnector(QtCore.QObject):
             'value': m.group(1) if m else reply
         }
         self.emit(QtCore.SIGNAL("serialReply(PyQt_PyObject)"), response)
-
-    def set(self, cmd, value):
-        pass

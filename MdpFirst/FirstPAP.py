@@ -5,13 +5,23 @@ from PyQt4 import QtCore, QtGui
 
 
 class FirstPAP(QtGui.QWidget):
-    def __init__(self, parentWidget):
+    def __init__(self, parentWidget, transport):
         super(FirstPAP, self).__init__()
+        self._transport = transport
+
         self.ui = Ui_FirstPapForm()
         self.setupUi(parentWidget)
 
     def setupUi(self, parentWidget):
         self.ui.setupUi(parentWidget)
+
+        # application -> thread
+        QtCore.QObject.connect(self,
+                               QtCore.SIGNAL("serialGet(PyQt_PyObject)"),
+                               self._transport.get)
+        QtCore.QObject.connect(self,
+                               QtCore.SIGNAL("serialWrite(PyQt_PyObject)"),
+                               self._transport.write)
 
         QtCore.QObject.connect(self.ui.cmdMode_cb,
                                QtCore.SIGNAL("currentIndexChanged(int)"),
@@ -68,10 +78,10 @@ class FirstPAP(QtGui.QWidget):
 
     def readCurrentConfig(self):
         for cmd in 'abcdefghikmnpqsvwz':
-            self.serialWrite(cmd)
+            self.emit(QtCore.SIGNAL("serialGet(PyQt_PyObject)"), cmd)
 
     def serialWrite(self, data):
-        self.emit(QtCore.SIGNAL("serialGet(PyQt_PyObject)"), data)
+        self.emit(QtCore.SIGNAL("serialWrite(PyQt_PyObject)"), data)
 
     def serialReply(self, reply):
         """

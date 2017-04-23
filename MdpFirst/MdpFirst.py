@@ -21,10 +21,10 @@ class MdpFirst(QtGui.QMainWindow):
 
         self.fillSerialPortList()
 
-        self.serialConnector = None
+        self.serialConnector = SerialConnector(None)
         self.thread = QtCore.QThread()
 
-        self.firstModule = FirstPAP(self.ui.moduleWidget)
+        self.firstModule = FirstPAP(self.ui.moduleWidget, self.serialConnector)
 
     def setupUi(self):
         self.ui.setupUi(self)
@@ -68,7 +68,8 @@ class MdpFirst(QtGui.QMainWindow):
         """
         port = self.ui.serialPortsList_cb.currentText()
         try:
-            self.serialConnector = SerialConnector(port)
+            self.serialConnector.setPort(port)
+            self.serialConnector.open()
         except SerialException as e:
             QtGui.QMessageBox.critical(self.ui.centralwidget,
                                        u"COM port error",
@@ -80,17 +81,10 @@ class MdpFirst(QtGui.QMainWindow):
         QtCore.QObject.connect(self,
                                QtCore.SIGNAL("serialGet(PyQt_PyObject)"),
                                self.serialConnector.get)
-        # module -> thread
-        QtCore.QObject.connect(self.firstModule,
-                               QtCore.SIGNAL("serialGet(PyQt_PyObject)"),
-                               self.serialConnector.get)
         # application <- thread
         QtCore.QObject.connect(self.serialConnector,
                                QtCore.SIGNAL("serialReply(PyQt_PyObject)"),
                                self.serialReply)
-        # QtCore.QObject.connect(self.serialConnector,
-        #                        QtCore.SIGNAL("serialReply(PyQt_PyObject)"),
-        #                        lambda value, func=self.serialReply: func(value, "bla"))
 
         self.thread.start()
 
@@ -109,7 +103,7 @@ class MdpFirst(QtGui.QMainWindow):
         self.thread.quit()
         self.thread.wait()
 
-        self.serialConnector = None
+        self.serialConnector.close()
 
         self.ui.serialConnect_btn.setEnabled(True)
         self.ui.serialDisconnect_btn.setEnabled(False)
@@ -122,10 +116,11 @@ class MdpFirst(QtGui.QMainWindow):
         :param reply: Data read
         """
         logging.info(reply)
+
         self.firstModule.serialReply(reply)
 
 
-def main():
+def MdpFirstApplication():
     app = QtGui.QApplication(sys.argv)
 
     w = MdpFirst()
@@ -134,4 +129,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    MdpFirstApplication()
