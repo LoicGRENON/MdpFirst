@@ -15,57 +15,63 @@ class FirstPAP(QtGui.QWidget):
 
         QtCore.QObject.connect(self.ui.cmdMode_cb,
                                QtCore.SIGNAL("currentIndexChanged(int)"),
-                               self.onSelectionChange)
+                               self.setCmdConfig)
         QtCore.QObject.connect(self.ui.fctMode_cb,
                                QtCore.SIGNAL("currentIndexChanged(int)"),
-                               self.onSelectionChange)
+                               self.setCmdConfig)
         QtCore.QObject.connect(self.ui.microStep_cb,
                                QtCore.SIGNAL("currentIndexChanged(int)"),
-                               self.onSelectionChange)
+                               self.setMicroStep)
         QtCore.QObject.connect(self.ui.currentFault_cb,
                                QtCore.SIGNAL("currentIndexChanged(int)"),
-                               self.onSelectionChange)
+                               self.setCurrentProfile)
         QtCore.QObject.connect(self.ui.currentProfile_cb,
                                QtCore.SIGNAL("currentIndexChanged(int)"),
-                               self.onSelectionChange)
+                               self.setCurrentProfile)
         QtCore.QObject.connect(self.ui.currentRange_cb,
                                QtCore.SIGNAL("currentIndexChanged(int)"),
-                               self.onSelectionChange)
+                               self.setCurrentRange)
 
         QtCore.QObject.connect(self.ui.nominalCurrent,
                                QtCore.SIGNAL("valueChanged(double)"),
-                               self.onValueChange)
+                               self.setNominalCurrent)
         QtCore.QObject.connect(self.ui.nominalTime,
                                QtCore.SIGNAL("valueChanged(int)"),
-                               self.onValueChange)
+                               self.setNominalTime)
         QtCore.QObject.connect(self.ui.maintainCurrent,
                                QtCore.SIGNAL("valueChanged(double)"),
-                               self.onValueChange)
+                               self.setMaintainCurrent)
         QtCore.QObject.connect(self.ui.maintainTime,
                                QtCore.SIGNAL("valueChanged(int)"),
-                               self.onValueChange)
+                               self.setMaintainTime)
         QtCore.QObject.connect(self.ui.boostCurrent,
                                QtCore.SIGNAL("valueChanged(double)"),
-                               self.onValueChange)
+                               self.setBoostCurrent)
         QtCore.QObject.connect(self.ui.boostTime,
                                QtCore.SIGNAL("valueChanged(double)"),
-                               self.onValueChange)
+                               self.setBoostTime)
         QtCore.QObject.connect(self.ui.maxSpeed,
                                QtCore.SIGNAL("valueChanged(int)"),
-                               self.onValueChange)
+                               self.setMaxSpeed)
         QtCore.QObject.connect(self.ui.fastDecay,
                                QtCore.SIGNAL("valueChanged(int)"),
-                               self.onValueChange)
+                               self.setFastDecay)
         QtCore.QObject.connect(self.ui.deadband,
                                QtCore.SIGNAL("valueChanged(int)"),
-                               self.onValueChange)
+                               self.setDeadband)
         QtCore.QObject.connect(self.ui.filterTime,
                                QtCore.SIGNAL("valueChanged(int)"),
-                               self.onValueChange)
+                               self.setFilterTime)
+        QtCore.QObject.connect(self.ui.eepromSave_btn,
+                               QtCore.SIGNAL("clicked()"),
+                               self.eepromSave)
 
     def readCurrentConfig(self):
         for cmd in 'abcdefghikmnpqsvwz':
-            self.emit(QtCore.SIGNAL("serialGet(PyQt_PyObject)"), cmd)
+            self.serialWrite(cmd)
+
+    def serialWrite(self, data):
+        self.emit(QtCore.SIGNAL("serialGet(PyQt_PyObject)"), data)
 
     def serialReply(self, reply):
         """
@@ -155,8 +161,65 @@ class FirstPAP(QtGui.QWidget):
             self.ui.currentFault_cb.setCurrentIndex(int(value[1]))
             self.ui.currentFault_cb.blockSignals(False)
 
-    def onSelectionChange(self, idx):
-        print("Selection changed %s %s" % (idx, self.sender()))
+    def setCmdConfig(self):
+        cmdMode = self.ui.cmdMode_cb.currentIndex()
+        fctMode = self.ui.fctMode_cb.currentIndex()
+        value = cmdMode * 10 + fctMode
+        self.serialWrite("c{:03d}".format(value))
 
-    def onValueChange(self, idx):
-        print("Value changed %s %s" % (idx, self.sender()))
+    def setMicroStep(self):
+        value = self.ui.microStep_cb.currentIndex()
+        self.serialWrite("s{:03d}".format(value))
+
+    def setCurrentProfile(self):
+        currentProfil = self.ui.currentProfile_cb.currentIndex()
+        currentFault = self.ui.currentFault_cb.currentIndex()
+        value = currentFault * 10 + currentProfil
+        self.serialWrite("z{:03d}".format(value))
+
+    def setFastDecay(self):
+        value = self.ui.fastDecay.value()
+        self.serialWrite("p{:03d}".format(value))
+
+    def setCurrentRange(self):
+        value = self.ui.currentRange_cb.currentIndex()
+        self.serialWrite("g{:03d}".format(value))
+
+    def setNominalCurrent(self):
+        value = int(self.ui.nominalCurrent.value() * 10)
+        self.serialWrite("n{:03d}".format(value))
+
+    def setNominalTime(self):
+        value = self.ui.nominalTime.value()
+        self.serialWrite("q{:03d}".format(value))
+
+    def setMaintainCurrent(self):
+        value = int(self.ui.maintainCurrent.value() * 10)
+        self.serialWrite("m{:03d}".format(value))
+
+    def setMaintainTime(self):
+        value = self.ui.maintainTime.value()
+        self.serialWrite("a{:03d}".format(value))
+
+    def setBoostCurrent(self):
+        value = int(self.ui.boostCurrent.value() * 10)
+        self.serialWrite("b{:03d}".format(value))
+
+    def setBoostTime(self):
+        value = int(self.ui.boostTime.value() * 10)
+        self.serialWrite("w{:03d}".format(value))
+
+    def setMaxSpeed(self):
+        value = int(self.ui.maxSpeed.value() / 100)
+        self.serialWrite("h{:03d}".format(value))
+
+    def setDeadband(self):
+        value = int(self.ui.deadband.value() / 10)
+        self.serialWrite("e{:03d}".format(value))
+
+    def setFilterTime(self):
+        value = int(self.ui.filterTime.value() / 8)
+        self.serialWrite("k{:03d}".format(value))
+
+    def eepromSave(self):
+        self.serialWrite("t")

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'firstPap.ui'
 #
-# Created: Sun Apr 23 22:39:51 2017
+# Created: Sun Apr 23 23:40:39 2017
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ except AttributeError:
 class Ui_FirstPapForm(object):
     def setupUi(self, FirstPapForm):
         FirstPapForm.setObjectName(_fromUtf8("FirstPapForm"))
-        FirstPapForm.resize(437, 359)
+        FirstPapForm.resize(437, 426)
         self.formLayout = QtGui.QFormLayout(FirstPapForm)
         self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout.setLabelAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
@@ -114,7 +114,7 @@ class Ui_FirstPapForm(object):
         self.label_24.setObjectName(_fromUtf8("label_24"))
         self.formLayout_6.setWidget(1, QtGui.QFormLayout.LabelRole, self.label_24)
         self.nominalTime = QtGui.QSpinBox(self.groupBox_5)
-        self.nominalTime.setMinimum(1)
+        self.nominalTime.setMinimum(0)
         self.nominalTime.setMaximum(99)
         self.nominalTime.setSingleStep(1)
         self.nominalTime.setObjectName(_fromUtf8("nominalTime"))
@@ -131,7 +131,7 @@ class Ui_FirstPapForm(object):
         self.formLayout_7.setWidget(0, QtGui.QFormLayout.LabelRole, self.label_25)
         self.maintainCurrent = QtGui.QDoubleSpinBox(self.groupBox_6)
         self.maintainCurrent.setDecimals(1)
-        self.maintainCurrent.setMinimum(0.1)
+        self.maintainCurrent.setMinimum(0.0)
         self.maintainCurrent.setMaximum(5.0)
         self.maintainCurrent.setSingleStep(0.1)
         self.maintainCurrent.setObjectName(_fromUtf8("maintainCurrent"))
@@ -140,7 +140,7 @@ class Ui_FirstPapForm(object):
         self.label_26.setObjectName(_fromUtf8("label_26"))
         self.formLayout_7.setWidget(1, QtGui.QFormLayout.LabelRole, self.label_26)
         self.maintainTime = QtGui.QSpinBox(self.groupBox_6)
-        self.maintainTime.setMinimum(10)
+        self.maintainTime.setMinimum(0)
         self.maintainTime.setMaximum(990)
         self.maintainTime.setSingleStep(10)
         self.maintainTime.setObjectName(_fromUtf8("maintainTime"))
@@ -156,14 +156,14 @@ class Ui_FirstPapForm(object):
         self.formLayout_8.setWidget(0, QtGui.QFormLayout.LabelRole, self.label_27)
         self.boostCurrent = QtGui.QDoubleSpinBox(self.groupBox_7)
         self.boostCurrent.setDecimals(1)
-        self.boostCurrent.setMinimum(0.1)
+        self.boostCurrent.setMinimum(0.0)
         self.boostCurrent.setMaximum(5.0)
         self.boostCurrent.setSingleStep(0.1)
         self.boostCurrent.setObjectName(_fromUtf8("boostCurrent"))
         self.formLayout_8.setWidget(0, QtGui.QFormLayout.FieldRole, self.boostCurrent)
         self.boostTime = QtGui.QDoubleSpinBox(self.groupBox_7)
         self.boostTime.setDecimals(1)
-        self.boostTime.setMinimum(0.1)
+        self.boostTime.setMinimum(0.0)
         self.boostTime.setMaximum(9.9)
         self.boostTime.setSingleStep(0.1)
         self.boostTime.setObjectName(_fromUtf8("boostTime"))
@@ -212,6 +212,18 @@ class Ui_FirstPapForm(object):
         self.label_11.setAlignment(QtCore.Qt.AlignCenter)
         self.label_11.setObjectName(_fromUtf8("label_11"))
         self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.label_11)
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setContentsMargins(-1, 20, -1, -1)
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem2)
+        self.eepromSave_btn = QtGui.QPushButton(FirstPapForm)
+        self.eepromSave_btn.setMinimumSize(QtCore.QSize(160, 40))
+        self.eepromSave_btn.setObjectName(_fromUtf8("eepromSave_btn"))
+        self.horizontalLayout.addWidget(self.eepromSave_btn)
+        spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem3)
+        self.formLayout.setLayout(11, QtGui.QFormLayout.SpanningRole, self.horizontalLayout)
 
         self.retranslateUi(FirstPapForm)
         QtCore.QMetaObject.connectSlotsByName(FirstPapForm)
@@ -274,6 +286,8 @@ class Ui_FirstPapForm(object):
         self.label_32.setText(_translate("FirstPapForm", "Temps d\'établissement :", None))
         self.filterTime.setSuffix(_translate("FirstPapForm", " ms", None))
         self.label_11.setText(_translate("FirstPapForm", "Mode de commande :", None))
+        self.eepromSave_btn.setText(_translate("FirstPapForm", "Sauvegarde des paramètres\n"
+"en EEPROM", None))
 
 
 if __name__ == "__main__":

@@ -31,8 +31,8 @@ class SerialConnector(QtCore.QObject):
         self.transport.write(data)
 
     def get(self, cmd):
-        if len(cmd) != 1:
-            raise ValueError("Command should be one character length.")
+        if len(cmd) > 4:
+            raise ValueError("Command should not exceed 4 characters length.")
 
         if type(cmd) is str:
             cmd = cmd.encode()
