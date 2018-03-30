@@ -2,7 +2,7 @@
 
 import re
 import serial
-from PyQt4 import QtCore
+from PySide import QtCore
 
 
 class SerialConnector(QtCore.QObject):

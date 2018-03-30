@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from FirstPAP import FirstPAP
+# from FirstDC import FirstDC
 from SerialConnector import SerialConnector
 from ui.main import Ui_MainWindow
-from PyQt4 import QtCore, QtGui
+from PySide import QtCore, QtGui
 from serial.tools import list_ports
 from serial import SerialException
 import logging
@@ -25,6 +26,7 @@ class MdpFirst(QtGui.QMainWindow):
         self.thread = QtCore.QThread()
 
         self.firstModule = FirstPAP(self.ui.moduleWidget, self.serialConnector)
+        # self.firstModule = FirstDC(self.ui.moduleWidget, self.serialConnector)
 
     def setupUi(self):
         self.ui.setupUi(self)

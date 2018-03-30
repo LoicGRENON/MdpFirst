@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from ui.firstPap import Ui_FirstPapForm
-from PyQt4 import QtCore, QtGui
+from PySide import QtCore, QtGui
 
 
 class FirstPAP(QtGui.QWidget):
